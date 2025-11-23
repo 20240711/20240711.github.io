@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我们的恋爱时光记录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 100px;
+            height: 100px;
+            background: #ff6b8b;
+            border-radius: 50%;
+            opacity: 0.2;
+        }
+        
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: -50px;
+            width: 150px;
+            height: 150px;
+            background: #ffd166;
+            border-radius: 50%;
+            opacity: 0.2;
+        }
+        
+        h1 {
+            color: #ff6b8b;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        .subtitle {
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+        
+        .avatar-section {
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .avatar-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ff6b8b;
+            margin-bottom: 10px;
+        }
+        
+        .avatar-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .results-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .result {
+            background: linear-gradient(135deg, #ff6b8b, #ff8e9e);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(255, 107, 139, 0.3);
+            transition: transform 0.3s;
+            flex: 1;
+        }
+        
+        .result:hover {
+            transform: translateY(-5px);
+        }
+        
+        .days {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .message {
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+        
+        .heart {
+            color: #ff6b8b;
+            font-size: 1.5rem;
+            animation: heartbeat 1.5s infinite;
+            display: inline-block;
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .quote {
+            margin-top: 25px;
+            font-style: italic;
+            color: #777;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .anniversary {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(255, 107, 139, 0.1);
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .days {
+                font-size: 2rem;
+            }
+            
+            .results-container {
+                flex-direction: column;
+            }
+        }
+        
+        /* 动态爱心背景样式 */
+        .floating-hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .heart-shape {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0;
+            animation: float 15s infinite linear;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) translateX(calc(var(--sway) * 100px));
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>我们的恋爱时光记录</h1>
+        <p class="subtitle">记录我们的甜蜜时光 <span class="heart">♥</span></p>
+        
+        <!-- 头像显示区域 -->
+        <div class="avatar-section">
+            <div class="avatar-container">
+                <img id="avatar1" class="avatar" alt="头像1">
+                <span class="avatar-label">石林</span>
+            </div>
+            <div class="avatar-container">
+                <img id="avatar2" class="avatar" alt="头像2">
+                <span class="avatar-label">葉承翰</span>
+            </div>
+        </div>
+        
+        <div class="results-container">
+            <div class="result">
+                <p>恋爱天数</p>
+                <div class="days" id="love-days-count">0</div>
+                <p class="message" id="love-message">计算中...</p>
+            </div>
+            
+            <div class="result">
+                <p>相识天数</p>
+                <div class="days" id="meet-days-count">0</div>
+                <p class="message" id="meet-message">计算中...</p>
+            </div>
+        </div>
+        
+        <div class="anniversary">
+            <p>我们的纪念日：</p>
+            <p>相识: <span id="meet-date-display">2024年6月27日</span></p>
+            <p>恋爱: <span id="love-date-display">2024年7月11日</span></p>
+        </div>
+        
+        <p class="quote" id="quote">爱是永恒的，时间只是它的见证者。</p>
+    </div>
+
+    <!-- 动态爱心背景容器 -->
+    <div class="floating-hearts" id="floating-hearts"></div>
+
+    <script>
+        // 创建动态爱心背景
+        function createFloatingHearts() {
+            const container = document.getElementById('floating-hearts');
+            const heartCount = 25; // 爱心数量
+            
+            // 淡淡的五颜六色
+            const colors = [
+                'rgba(255, 182, 193, 0.6)', // 浅粉色
+                'rgba(255, 160, 122, 0.6)', // 浅橙色
+                'rgba(221, 160, 221, 0.6)', // 浅紫色
+                'rgba(152, 251, 152, 0.6)', // 浅绿色
+                'rgba(135, 206, 250, 0.6)', // 浅蓝色
+                'rgba(255, 215, 0, 0.6)'    // 浅金色
+            ];
+            
+            // 爱心符号
+            const heartSymbols = ['♥', '❤', '💖', '💗', '💓', '💕'];
+            
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-shape';
+                
+                // 随机选择爱心符号和颜色
+                const symbolIndex = Math.floor(Math.random() * heartSymbols.length);
+                const colorIndex = Math.floor(Math.random() * colors.length);
+                
+                heart.innerHTML = heartSymbols[symbolIndex];
+                heart.style.color = colors[colorIndex];
+                
+                // 随机位置和大小
+                const size = Math.random() * 20 + 15; // 15-35px
+                const left = Math.random() * 100;
+                const delay = Math.random() * 15;
+                const duration = Math.random() * 10 + 15;
+                const sway = Math.random() * 2 - 1; // 随机左右晃动方向
+                
+                heart.style.fontSize = `${size}px`;
+                heart.style.left = `${left}%`;
+                heart.style.animationDelay = `${delay}s`;
+                heart.style.animationDuration = `${duration}s`;
+                heart.style.setProperty('--sway', sway);
+                
+                container.appendChild(heart);
+            }
+        }
+        
+        // 设置头像路径（在这里修改您的头像路径）
+        function setupAvatars() {
+            // 修改这里的路径为您的服务器头像路径
+            const avatar1Path = 'images/1.jpg';
+            const avatar2Path = 'images/2.jpg';
+            
+            // 添加时间戳参数，避免缓存问题
+            const timestamp = new Date().getTime();
+            
+            // 设置头像图片
+            document.getElementById('avatar1').src = `${avatar1Path}?t=${timestamp}`;
+            document.getElementById('avatar2').src = `${avatar2Path}?t=${timestamp}`;
+            
+            // 如果图片加载失败，使用默认图片
+            document.getElementById('avatar1').onerror = function() {
+                this.src = 'https://via.placeholder.com/80?text=头像1';
+            };
+            document.getElementById('avatar2').onerror = function() {
+                this.src = 'https://via.placeholder.com/80?text=头像2';
+            };
+        }
+        
+        // 计算天数
+        function calculateDays() {
+            // 固定日期 - 恋爱开始日期
+            const startDate = new Date('2024-07-11');
+            // 固定日期 - 相识日期
+            const meetDate = new Date('2024-06-27');
+            const today = new Date();
+            
+            // 设置时间为同一天，避免时间差影响
+            startDate.setHours(0, 0, 0, 0);
+            meetDate.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+            
+            // 计算恋爱天数
+            const loveTimeDiff = today.getTime() - startDate.getTime();
+            const loveDaysDiff = Math.floor(loveTimeDiff / (1000 * 3600 * 24));
+            
+            // 计算相识天数
+            const meetTimeDiff = today.getTime() - meetDate.getTime();
+            const meetDaysDiff = Math.floor(meetTimeDiff / (1000 * 3600 * 24));
+            
+            // 更新显示
+            document.getElementById('love-days-count').textContent = loveDaysDiff;
+            document.getElementById('meet-days-count').textContent = meetDaysDiff;
+            
+            // 更新纪念日显示
+            document.getElementById('meet-date-display').textContent = formatDate(meetDate);
+            document.getElementById('love-date-display').textContent = formatDate(startDate);
+            
+            // 根据天数显示不同消息
+            updateMessage(loveDaysDiff, document.getElementById('love-message'), '恋爱');
+            updateMessage(meetDaysDiff, document.getElementById('meet-message'), '相识');
+        }
+        
+        // 格式化日期显示
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            return `${year}年${month}月${day}日`;
+        }
+        
+        // 更新消息显示
+        function updateMessage(daysDiff, messageElement, type) {
+            if (daysDiff === 0) {
+                messageElement.textContent = `今天是${type}的第一天！`;
+            } else if (daysDiff === 1) {
+                messageElement.textContent = `我们已经${type}1天了！`;
+            } else if (daysDiff < 30) {
+                messageElement.textContent = `我们已经${type}${daysDiff}天了！`;
+            } else if (daysDiff < 365) {
+                const months = Math.floor(daysDiff / 30);
+                messageElement.textContent = `我们已经${type}${months}个月了！`;
+            } else {
+                const years = Math.floor(daysDiff / 365);
+                const remainingDays = daysDiff % 365;
+                messageElement.textContent = `我们已经${type}${years}年${remainingDays}天了！`;
+            }
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            createFloatingHearts();
+            setupAvatars();
+            calculateDays();
+            
+            // 每天更新一次天数
+            setInterval(calculateDays, 24 * 60 * 60 * 1000);
+        });
+    </script>
+</body>
+</html>
