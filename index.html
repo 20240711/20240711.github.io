@@ -15,7 +15,6 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            -webkit-tap-highlight-color: transparent;
         }
         
         body {
@@ -26,7 +25,7 @@
             align-items: center;
             padding: 20px;
             color: #333;
-            overflow: hidden; /* 隐藏滚动条 */
+            overflow: hidden;
             position: relative;
         }
         
@@ -36,16 +35,13 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
             padding: 40px 30px;
             width: 100%;
-            max-width: 600px;
+            max-width: 600px; /* 增加容器宽度 */
             text-align: center;
             position: relative;
-            overflow: hidden; /* 隐藏滚动条 */
+            overflow: hidden;
             z-index: 10;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.5);
-            /* 强制GPU加速 */
-            transform: translate3d(0, 0, 0);
-            will-change: transform;
         }
         
         .container::before {
@@ -166,7 +162,6 @@
             display: flex;
             gap: 15px;
             margin-top: 20px;
-            justify-content: center;
         }
         
         .result {
@@ -177,7 +172,7 @@
             box-shadow: 0 5px 15px rgba(255, 107, 139, 0.3);
             transition: transform 0.3s;
             flex: 1;
-            max-width: 280px;
+            min-width: 250px; /* 增加卡片最小宽度 */
             min-height: 180px;
             display: flex;
             flex-direction: column;
@@ -198,7 +193,7 @@
         .message {
             font-size: 1rem;
             margin-top: 10px;
-            white-space: nowrap;
+            white-space: nowrap; /* 防止文字换行 */
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -234,6 +229,37 @@
             color: #ff6b8b;
         }
         
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px 20px;
+                max-width: 95%;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .days {
+                font-size: 2rem;
+            }
+            
+            .real-time-clock {
+                font-size: 1.5rem;
+            }
+            
+            .results-container {
+                flex-direction: column;
+            }
+            
+            .result {
+                min-width: auto; /* 移动端恢复自动宽度 */
+            }
+            
+            .message {
+                white-space: normal; /* 移动端允许换行 */
+            }
+        }
+        
         /* 动态爱心背景样式 */
         .floating-hearts {
             position: absolute;
@@ -243,26 +269,19 @@
             left: 0;
             pointer-events: none;
             z-index: 1;
-            /* 强制GPU加速 */
-            transform: translate3d(0, 0, 0);
-            will-change: transform;
         }
         
         .heart-shape {
             position: absolute;
             font-size: 20px;
             opacity: 0;
-            /* 使用transform3d优化动画性能 */
             animation: float 15s infinite linear;
             filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
-            /* 强制GPU加速 */
-            transform: translate3d(0, 0, 0);
-            will-change: transform, opacity;
         }
         
         @keyframes float {
             0% {
-                transform: translate3d(0, 100vh, 0);
+                transform: translateY(100vh) translateX(0);
                 opacity: 0;
             }
             10% {
@@ -272,54 +291,8 @@
                 opacity: 0.7;
             }
             100% {
-                transform: translate3d(calc(var(--sway) * 100px), -100px, 0);
+                transform: translateY(-100px) translateX(calc(var(--sway) * 100px));
                 opacity: 0;
-            }
-        }
-
-        /* 手机端特殊适配 - 保持与电脑端相同的布局 */
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-                overflow: hidden; /* 确保手机端也没有滚动条 */
-            }
-            
-            .container {
-                padding: 30px 25px;
-                max-width: 95%;
-                margin: 10px auto;
-                transform: scale(0.85); /* 缩小整体比例 */
-                transform-origin: center;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .days {
-                font-size: 2.2rem;
-            }
-            
-            .real-time-clock {
-                font-size: 1.6rem;
-            }
-            
-            .result {
-                min-width: 45%; /* 确保两个卡片并排显示 */
-                max-width: 45%;
-            }
-            
-            .message {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-        }
-
-        /* 超小屏幕适配 */
-        @media (max-width: 400px) {
-            .container {
-                transform: scale(0.75); /* 进一步缩小比例 */
             }
         }
     </style>
@@ -375,10 +348,10 @@
     <div class="floating-hearts" id="floating-hearts"></div>
 
     <script>
-        // 创建动态爱心背景
+        // 创建动态爱心背景 - 增加爱心数量
         function createFloatingHearts() {
             const container = document.getElementById('floating-hearts');
-            const heartCount = 50;
+            const heartCount = 100; // 增加爱心数量到100个
             
             // 淡淡的五颜六色
             const colors = [
@@ -405,11 +378,11 @@
                 heart.style.color = colors[colorIndex];
                 
                 // 随机位置和大小
-                const size = Math.random() * 20 + 10;
+                const size = Math.random() * 20 + 10; // 10-30px，增加大小范围
                 const left = Math.random() * 100;
                 const delay = Math.random() * 15;
-                const duration = Math.random() * 10 + 10;
-                const sway = Math.random() * 2 - 1;
+                const duration = Math.random() * 10 + 10; // 调整动画持续时间
+                const sway = Math.random() * 2 - 1; // 随机左右晃动方向
                 
                 heart.style.fontSize = `${size}px`;
                 heart.style.left = `${left}%`;
@@ -481,7 +454,7 @@
             }
         }
         
-        // 实时计时器函数
+        // 实时计时器函数 - 修改为中文格式
         function updateRealTime() {
             const startDate = new Date('2024-07-11');
             const now = new Date();
@@ -497,7 +470,7 @@
             const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
             
-            // 更新显示
+            // 更新显示 - 使用中文格式
             document.getElementById('real-time-clock').textContent = 
                 `${days}天${hours}小时${minutes}分钟${seconds}秒`;
             
