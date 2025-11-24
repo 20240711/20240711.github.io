@@ -272,58 +272,6 @@
                 opacity: 0;
             }
         }
-        
-        /* ========== 添加的移动端优化代码 ========== */
-        
-        /* 为移动端添加GPU加速 */
-        @media (max-width: 768px) {
-            body {
-                /* 启用硬件加速的滚动 */
-                -webkit-overflow-scrolling: touch;
-                /* 防止滚动时页面闪烁 */
-                -webkit-tap-highlight-color: transparent;
-                /* 优化滚动性能 */
-                overflow-scrolling: touch;
-            }
-            
-            .container,
-            .real-time-container,
-            .result,
-            .heart-shape {
-                /* 启用GPU加速 */
-                transform: translateZ(0);
-                will-change: transform;
-            }
-            
-            /* 优化模糊效果性能 */
-            .real-time-container::before {
-                /* 减少模糊半径以提升性能 */
-                filter: blur(10px);
-            }
-            
-            /* 减少爱心数量以提升性能 */
-            .floating-hearts {
-                /* 通过伪元素减少爱心数量 */
-            }
-        }
-        
-        /* 防止移动端点击延迟 */
-        .container * {
-            touch-action: manipulation;
-        }
-        
-        /* 优化动画性能 */
-        .heart-shape {
-            /* 使用GPU加速动画 */
-            transform: translateZ(0);
-            will-change: transform, opacity;
-        }
-        
-        /* 优化滚动性能 */
-        .container {
-            /* 创建独立的复合层 */
-            isolation: isolate;
-        }
     </style>
 </head>
 <body>
@@ -380,7 +328,7 @@
         // 创建动态爱心背景 - 增加爱心数量
         function createFloatingHearts() {
             const container = document.getElementById('floating-hearts');
-            const heartCount = 80; // 增加爱心数量到80个
+            const heartCount = 50; // 增加爱心数量到50个
             
             // 淡淡的五颜六色
             const colors = [
