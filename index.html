@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon" href="images/heart.ico" type="image/x-icon">
     <title>我们的恋爱时光记录</title>
     <style>
@@ -26,18 +30,18 @@
         }
         
         .container {
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255, 255, 255, 0.98);
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
             padding: 40px 30px;
             width: 100%;
-            max-width: 500px;
+            max-width: 600px; /* 增加容器宽度 */
             text-align: center;
             position: relative;
             overflow: hidden;
             z-index: 10;
             backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
         
         .container::before {
@@ -49,7 +53,7 @@
             height: 100px;
             background: #ff6b8b;
             border-radius: 50%;
-            opacity: 0.2;
+            opacity: 0.3;
         }
         
         .container::after {
@@ -61,7 +65,7 @@
             height: 150px;
             background: #ffd166;
             border-radius: 50%;
-            opacity: 0.2;
+            opacity: 0.3;
         }
         
         h1 {
@@ -72,9 +76,10 @@
         }
         
         .subtitle {
-            color: #888;
+            color: #ff6b8b;
             margin-bottom: 30px;
             font-size: 1rem;
+            font-weight: 500;
         }
         
         .avatar-section {
@@ -102,7 +107,7 @@
         
         .avatar-label {
             font-size: 0.9rem;
-            color: #666;
+            color: #ff6b8b;
             font-weight: 500;
         }
         
@@ -167,6 +172,11 @@
             box-shadow: 0 5px 15px rgba(255, 107, 139, 0.3);
             transition: transform 0.3s;
             flex: 1;
+            min-width: 250px; /* 增加卡片最小宽度 */
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         
         .result:hover {
@@ -183,6 +193,9 @@
         .message {
             font-size: 1rem;
             margin-top: 10px;
+            white-space: nowrap; /* 防止文字换行 */
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .heart {
@@ -201,7 +214,7 @@
         .quote {
             margin-top: 25px;
             font-style: italic;
-            color: #777;
+            color: #ff6b8b;
             font-size: 0.9rem;
             line-height: 1.5;
         }
@@ -209,15 +222,17 @@
         .anniversary {
             margin-top: 15px;
             padding: 15px;
-            background-color: rgba(255, 107, 139, 0.1);
+            background-color: rgba(255, 107, 139, 0.15);
             border-radius: 15px;
             font-size: 0.9rem;
-            border: 1px solid rgba(255, 107, 139, 0.2);
+            border: 1px solid rgba(255, 107, 139, 0.3);
+            color: #ff6b8b;
         }
         
         @media (max-width: 600px) {
             .container {
                 padding: 25px 20px;
+                max-width: 95%;
             }
             
             h1 {
@@ -234,6 +249,14 @@
             
             .results-container {
                 flex-direction: column;
+            }
+            
+            .result {
+                min-width: auto; /* 移动端恢复自动宽度 */
+            }
+            
+            .message {
+                white-space: normal; /* 移动端允许换行 */
             }
         }
         
@@ -282,11 +305,11 @@
         <!-- 头像显示区域 -->
         <div class="avatar-section">
             <div class="avatar-container">
-                <img id="avatar1" class="avatar" alt="头像1">
+                <img id="avatar1" class="avatar" src="images/1.jpg" alt="头像1">
                 <span class="avatar-label">石林</span>
             </div>
             <div class="avatar-container">
-                <img id="avatar2" class="avatar" alt="头像2">
+                <img id="avatar2" class="avatar" src="images/2.jpg" alt="头像2">
                 <span class="avatar-label">葉承翰</span>
             </div>
         </div>
@@ -328,7 +351,7 @@
         // 创建动态爱心背景 - 增加爱心数量
         function createFloatingHearts() {
             const container = document.getElementById('floating-hearts');
-            const heartCount = 80; // 增加爱心数量到80个
+            const heartCount = 100; // 增加爱心数量到100个
             
             // 淡淡的五颜六色
             const colors = [
@@ -369,20 +392,6 @@
                 
                 container.appendChild(heart);
             }
-        }
-        
-        // 设置头像路径（在这里修改您的头像路径）
-        function setupAvatars() {
-            // 修改这里的路径为您的服务器头像路径
-            const avatar1Path = 'images/1.jpg';
-            const avatar2Path = 'images/2.jpg';
-            
-            // 添加时间戳参数，避免缓存问题
-            const timestamp = new Date().getTime();
-            
-            // 设置头像图片
-            document.getElementById('avatar1').src = `${avatar1Path}?t=${timestamp}`;
-            document.getElementById('avatar2').src = `${avatar2Path}?t=${timestamp}`;
         }
         
         // 计算天数
@@ -481,7 +490,6 @@
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             createFloatingHearts();
-            setupAvatars();
             calculateDays();
             updateRealTime(); // 立即执行一次
             
